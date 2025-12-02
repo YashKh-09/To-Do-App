@@ -3,6 +3,7 @@ const tasks = document.getElementById("Tasks");
 let addbutton = document.getElementById("button");
 let removeall = document.getElementById("removeall");
 let tasksync = [];
+
 function task() {
   inputvalue = input.value.trim();
   if (inputvalue === "") {
@@ -36,32 +37,44 @@ function task() {
     task.appendChild(button);
     tasks.appendChild(task);
     input.value = "";
-    tasksync.push(inputvalue);
+    tasksync.push({ task: inputvalue, compelete: false });
     console.log(tasksync);
-}
+  }
 }
 addbutton.addEventListener("click", () => {
-    task();
+  task();
 });
 let keypress = input.addEventListener("keydown", (e) => {
-    if (e.key == "Enter") {
-        task();
-    }
+  if (e.key == "Enter") {
+    task();
+  }
 });
 tasks.addEventListener("click", (e) => {
   target = e.target.classList;
   if (target.contains("remove")) {
-    let toremove = e.target.parentElement.querySelector('span').textContent
-    index = tasksync.indexOf(toremove);
-    tasksync.splice(index,1);
+    const toremove = e.target.parentElement.querySelector("span").textContent;
+    for (let i = 0; i < tasksync.length; i++) {
+      if (tasksync[i] && tasksync[i].task == toremove) {
+        tasksync.splice(i, 1);
+        i--;
+      }
+    }
     console.log(tasksync);
     e.target.parentElement.remove();
   } else if (target.contains("done")) {
-    done = e.target.firstElementChild.classList;
+    to = e.target.querySelector("span").textContent;
+    done = e.target.querySelector("span").classList;
     done.toggle("text-gray-400");
     done.toggle("line-through");
+    done.toggle("completed");
+
+    for (let i = 0; i < tasksync.length; i++) {
+      if (tasksync[i] && tasksync[i].task == to) {
+         tasksync[i].compelete = !tasksync[i].compelete
+      }
+    }
     console.log(tasksync);
-}
+  }
 });
 removeall.addEventListener("click", () => {
   tasks.innerHTML = "";
@@ -69,3 +82,40 @@ removeall.addEventListener("click", () => {
   console.log(tasksync);
 });
 
+tasks.addEventListener("dblclick", (j) => {
+  if (j.target.tagName === "SPAN") {
+    edit(j.target);
+  }
+});
+
+function edit(content) {
+  let replace = content.textContent;
+  const toedit = content.textContent;
+  const foredit = document.createElement("input");
+  foredit.type = "text";
+  foredit.value = toedit;
+
+  content.textContent = "";
+  content.appendChild(foredit);
+  foredit.focus();
+  foredit.addEventListener("blur", () => {
+    saveedit(content, foredit, replace);
+  });
+  foredit.addEventListener("keydown", (e) => {
+    if (e.key == "Enter") {
+      saveedit(content, foredit, replace);
+    }
+  });
+}
+
+function saveedit(toedit, fe, replace) {
+  save = fe.value;
+  toedit.removeChild(fe);
+  toedit.textContent = save;
+
+  index = tasksync.indexOf(replace);
+  tasksync[index] = save;
+  console.log(tasksync);
+}
+
+// task: x, status: y
