@@ -2,6 +2,9 @@ let input = document.getElementById("input");
 const tasks = document.getElementById("Tasks");
 let addbutton = document.getElementById("button");
 let removeall = document.getElementById("removeall");
+let all = document.getElementById("filter-all");
+let completed = document.getElementById("filter-completed");
+let pending = document.getElementById("filter-pending");
 let tasksync = [];
 
 function task() {
@@ -39,6 +42,7 @@ function task() {
     input.value = "";
     tasksync.push({ task: inputvalue, compelete: false });
     console.log(tasksync);
+    
   }
 }
 addbutton.addEventListener("click", () => {
@@ -117,5 +121,33 @@ function saveedit(toedit, fe, replace) {
   tasksync[index] = save;
   console.log(tasksync);
 }
+all.addEventListener('click' , () => {
+   Array.from(tasks.children).forEach(task => {
+  const check = task.querySelector('span').classList
+    task.classList.remove('hidden')
+});
+})
+completed.addEventListener('click' , () => {
+ Array.from(tasks.children).forEach(task => {
+  const check = task.querySelector('span').classList
+  if (!check.contains('completed')) {
+    task.classList.add('hidden')
+  }
+  if (check.contains('completed')) {
+    task.classList.remove('hidden')
+  }
+});
+})
+pending.addEventListener('click' , () => {
+   Array.from(tasks.children).forEach(task => {
+  const check = task.querySelector('span').classList
+  if (!check.contains('completed')) {
+    task.classList.remove('hidden')
+  }
+  if (check.contains('completed')) {
+    task.classList.add('hidden')
+  }
+});
+})
 
-// task: x, status: y
+ 

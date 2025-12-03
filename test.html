@@ -1,52 +1,66 @@
-<ul id="editableList">
-  <li id="item1">Click to edit me</li>
-  <li id="item2">Another editable item</li>
-</ul>
-
-<script>
-    // Get the list
-const list = document.getElementById('editableList');
-
-// Add a click event listener to the list (event delegation)
-list.addEventListener('click', function(event) {
-  // Check if the clicked element is an LI
-  if (event.target.tagName === 'LI') {
-    makeEditable(event.target);
-  }
-});
-
-function makeEditable(liElement) {
-  // Store the original text and create an input element
-  const originalText = liElement.textContent;
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.value = originalText;
-
-  // Replace the LI's content with the input field
-  liElement.textContent = '';
-  liElement.appendChild(input);
-  input.focus(); // Focus the input for immediate typing
-
-  // Add event listener to save the changes when the user clicks away (blur event)
-  input.addEventListener('blur', function() {
-    saveChanges(liElement, input);
-  });
-
-//   Optional: Allow saving changes with the "Enter" key
-  input.addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-      saveChanges(liElement, input);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Local Storage Demo</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
     }
-  });
-}
+    input {
+      padding: 8px;
+      font-size: 16px;
+    }
+    button {
+      padding: 8px 12px;
+      margin-left: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
 
-function saveChanges(liElement, inputElement) {
-  const newText = inputElement.value;
-  // Remove the input field and restore the text content
-  liElement.removeChild(inputElement);
-  liElement.textContent = newText;
-  // Here you can add logic to save the changes to a server using an AJAX request
-  console.log('Content updated to:', newText);
-}
+<body>
 
-</script>
+  <h2>Save Your Name</h2>
+
+  <input type="text" id="nameInput" placeholder="Enter your name">
+  <button id="saveBtn">Save</button>
+
+  <p id="result"></p>
+
+  <script>
+
+    // STEP 1: Select elements
+    const input = document.getElementById("nameInput");
+    const btn = document.getElementById("saveBtn");
+    const result = document.getElementById("result");
+
+
+    // STEP 2: Load previously saved name from localStorage (when page loads)
+    const savedName = localStorage.getItem("username");
+    console.log(savedName);
+    
+
+    if (savedName) {
+      result.textContent = "Saved Name: " + savedName;
+      input.value = savedName; // show in input box
+    }
+
+
+    // STEP 3: Save the name when button is clicked
+    btn.addEventListener("click", () => {
+      const name = input.value;
+
+      // Save to localStorage
+     r = localStorage.setItem("username", name);
+console.log(r);
+
+      // show it on the page
+      result.textContent = "Saved Name: " + name;
+    });
+
+  </script>
+
+</body>
+</html>
