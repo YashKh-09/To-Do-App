@@ -159,7 +159,6 @@ tasks.addEventListener("dblclick", (j) => {
 
 // this is what happen when user dbl click on a to do
 function edit(content) {
-  const replace = content.textContent;
   const toedit = content.textContent;
   const foredit = document.createElement("input");
   foredit.type = "text";
@@ -169,11 +168,11 @@ function edit(content) {
   content.appendChild(foredit);
   foredit.focus();
   foredit.addEventListener("blur", () => {
-    saveedit(content, foredit, replace);
+    saveedit(content, foredit, toedit);
   });
   foredit.addEventListener("keydown", (e) => {
     if (e.key == "Enter") {
-      saveedit(content, foredit, replace);
+      saveedit(content, foredit, toedit);
     }
   });
 }
